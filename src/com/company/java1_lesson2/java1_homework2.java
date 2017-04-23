@@ -98,22 +98,32 @@ public class java1_homework2 {
     // массива  на  n  позиций.  Для  усложнения  задачи  нельзя  пользоваться  вспомогательными
     // массивами.
     public static void offsetArray(int[] arrayInt, int offset) {
-        //int i = offset / Math.abs(offset);
+        int sign = -1 * offset / Math.abs(offset);
         System.out.println(Arrays.toString(arrayInt));
+        int length = arrayInt.length;
+
+        for (int i = 0; i < length; i++) {
+            if (i >= (length + sign * offset)) {
+                arrayInt[0 + sign * i - 1] = 0;
+            } else if ((i + offset) >= 0) {
+                arrayInt[i + offset] = arrayInt[i];
+            }
+        }
+
         if (offset < 0) {
-            for (int i = 0; i < arrayInt.length; i++) {
-                if (i >= (arrayInt.length + offset)) {
+            for (int i = 0; i < length; i++) {
+                if (i >= (length + offset)) {
                     arrayInt[i] = 0;
                 } else if ((i + offset) >= 0) {
                     arrayInt[i + offset] = arrayInt[i];
                 }
             }
         } else {
-            for (int i = 0; i < arrayInt.length; i++) {
-                if (i >= (arrayInt.length - offset)) { // (arrayInt.length - (i + 1)
-                    arrayInt[arrayInt.length - i - 1] = 0;
-                } else if ((arrayInt.length - i) >= 0) {
-                    arrayInt[i + offset] = arrayInt[i];
+            for (int i = 0; i < length; i++) {
+                if (i >= (length - offset)) { // (arrayInt.length - (i + 1)
+                    arrayInt[length - i - 1] = 0;
+                } else if (i >= (offset - 2)) {
+                    arrayInt[length - i - 3 + offset] = arrayInt[length - i - 3];
                 }
             }
         }
