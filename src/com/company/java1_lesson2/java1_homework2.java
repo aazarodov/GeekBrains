@@ -62,7 +62,7 @@ public class java1_homework2 {
     // 5  **  Задать  одномерный  массив  и  найти  в  нем  минимальный  и  максимальный  элементы  (без
     // помощи интернета);
     public static void exercise5() {
-        System.out.println("Exercise #4");
+        System.out.println("Exercise #5");
         int[] arrayInt = new int[10];
         int min = 0, max = 0;
         for (int i = 0; i < arrayInt.length; i++) {
@@ -70,12 +70,13 @@ public class java1_homework2 {
             if (i == 0) {
                 min = arrayInt[0];
                 max = arrayInt[0];
-            }
-            if (min > arrayInt[i]) {
-                min = arrayInt[i];
-            }
-            if (max < arrayInt[i]) {
-                max = arrayInt[i];
+            } else {
+                if (min > arrayInt[i]) {
+                    min = arrayInt[i];
+                }
+                if (max < arrayInt[i]) {
+                    max = arrayInt[i];
+                }
             }
         }
         System.out.println(Arrays.toString(arrayInt));
@@ -89,8 +90,35 @@ public class java1_homework2 {
     // массива равны. Примеры:  checkBalance([1, 1, 1,  ||  2, 1]) →  true,  checkBalance ([2, 1, 1, 2, 1]) →
     // false,  checkBalance  ([10,  ||  10])  →  true, граница показана символами  ||, эти символы в массив
     // не входят.
-    public static void exercise6() {
+    public static boolean checkSumLeftRightArray(int[] arrayInt) {
+        int sumLeft = 0, sumRight;
+        String resultLeft = "[";
+        String resultRight;
+        for (int i = 0; i < (arrayInt.length - 1); i++) {
+            resultLeft += arrayInt[i];
+            sumRight = 0;
+            resultRight = "]";
+            sumLeft += arrayInt[i];
+            for (int j = i + 1; j < (arrayInt.length); j++) {
+                sumRight += arrayInt[j];
+                resultRight = ", " + arrayInt[j] + resultRight;
+            }
+            if (sumLeft == sumRight) {
+                System.out.println(resultLeft + " || " + resultRight.substring(2));
+                return true;
+            }
+            resultLeft += ", ";
+        }
+        System.out.println(Arrays.toString(arrayInt));
+        return false;
+    }
 
+    public static void exercise6() {
+        System.out.println("Exercise #6");
+        int[] arrayInt = {1, 1, 1, 2, 1};
+        boolean arrayPassedCheck = checkSumLeftRightArray(arrayInt);
+        System.out.println("Место нашлось: " + arrayPassedCheck);
+        System.out.println("-----------");
     }
 
     // 7  ****  Написать метод, которому на вход подается одномерный массив и число  n  (может быть
@@ -98,50 +126,50 @@ public class java1_homework2 {
     // массива  на  n  позиций.  Для  усложнения  задачи  нельзя  пользоваться  вспомогательными
     // массивами.
     public static void offsetArray(int[] arrayInt, int offset) {
-        int sign = -1 * offset / Math.abs(offset);
         System.out.println(Arrays.toString(arrayInt));
+        int index;
         int length = arrayInt.length;
-
-        for (int i = 0; i < length; i++) {
-            if (i >= (length + sign * offset)) {
-                arrayInt[0 + sign * i - 1] = 0;
-            } else if ((i + offset) >= 0) {
-                arrayInt[i + offset] = arrayInt[i];
-            }
-        }
-
-        if (offset < 0) {
-            for (int i = 0; i < length; i++) {
-                if (i >= (length + offset)) {
-                    arrayInt[i] = 0;
-                } else if ((i + offset) >= 0) {
-                    arrayInt[i + offset] = arrayInt[i];
-                }
-            }
-        } else {
-            for (int i = 0; i < length; i++) {
-                if (i >= (length - offset)) { // (arrayInt.length - (i + 1)
-                    arrayInt[length - i - 1] = 0;
-                } else if (i >= (offset - 2)) {
-                    arrayInt[length - i - 3 + offset] = arrayInt[length - i - 3];
-                }
+        int offsetAbs = Math.abs(offset);
+//        int startPoint = (offset < 0) ? 0 : arrayInt.length;
+//        int sign = -1 * offset / offsetAbs;
+//        int shift = (offset < 0) ? 0 : 1;
+//        for (int i = offsetAbs; i < (arrayInt.length + offsetAbs); i++) {
+//            index = startPoint + sign * i - shift;
+//            if (i >= arrayInt.length) {
+//                arrayInt[index + offset] = 0;
+//            } else {
+//                arrayInt[index + offset] = arrayInt[index];
+//            }
+//        }
+        int sign = offset / offsetAbs;
+        int startPoint = (offset > 0) ? 0 : length;
+        for (int i = 0; i < offsetAbs; i++) {
+            for (int j = 1; j < arrayInt.length; j++) {
+                index = startPoint + sign * j;
+                arrayInt[index - 1] = arrayInt[index] + arrayInt[index - 1];
+                arrayInt[index] = arrayInt[index - 1] - arrayInt[index];
+                arrayInt[index - 1] = arrayInt[index - 1] - arrayInt[index];
             }
         }
         System.out.println(Arrays.toString(arrayInt));
     }
 
     public static void exercise7() {
-        int[] arrayInt = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        offsetArray(arrayInt, 2);
+        System.out.println("Exercise #7");
+        int[] arrayInt1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        offsetArray(arrayInt1, -2);
+        int[] arrayInt2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        offsetArray(arrayInt2, 2);
+        System.out.println("-----------");
     }
 
     public static void main(String[] args) {
-//        exercise1();
-//        exercise2();
-//        exercise3();
-//        exercise4();
-//        exercise5();
-//        exercise6();
+        exercise1();
+        exercise2();
+        exercise3();
+        exercise4();
+        exercise5();
+        exercise6();
         exercise7();
     }
 }
