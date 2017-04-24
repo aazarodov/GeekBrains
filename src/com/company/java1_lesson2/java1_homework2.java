@@ -165,7 +165,7 @@ public class java1_homework2 {
         int[] arrayInt1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         offsetArray(arrayInt1, -2);
         int[] arrayInt2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        offsetArray(arrayInt2, 0);
+        offsetArray(arrayInt2, 2);
         System.out.println("-----------");
     }
 
