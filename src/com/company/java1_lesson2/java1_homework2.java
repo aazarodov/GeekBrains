@@ -93,14 +93,13 @@ public class java1_homework2 {
     // не входят.
     public static boolean checkSumLeftRightArray(int[] arrayInt) {
         int sumLeft = 0, sumRight;
-        String resultLeft = "[";
-        String resultRight;
+        String resultLeft = "[", resultRight;
         for (int i = 0; i < (arrayInt.length - 1); i++) {
+            sumLeft += arrayInt[i];
             resultLeft += arrayInt[i];
             sumRight = 0;
             resultRight = "]";
-            sumLeft += arrayInt[i];
-            for (int j = i + 1; j < (arrayInt.length); j++) {
+            for (int j = i + 1; j < arrayInt.length; j++) {
                 sumRight += arrayInt[j];
                 resultRight = ", " + arrayInt[j] + resultRight;
             }
