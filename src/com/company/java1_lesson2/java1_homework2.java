@@ -54,6 +54,7 @@ public class java1_homework2 {
         int[][] arrayInt = new int[5][5];
         for (int i = 0; i < arrayInt.length; i++) {
             arrayInt[i][i] = 1;
+            arrayInt[i][arrayInt.length - i - 1] = 1;
             System.out.println(Arrays.toString(arrayInt[i]));
         }
         System.out.println("-----------");
@@ -130,6 +131,7 @@ public class java1_homework2 {
         int index;
         int length = arrayInt.length;
         int offsetAbs = Math.abs(offset);
+//        // смещение как в побитовых операциях
 //        int startPoint = (offset < 0) ? 0 : arrayInt.length;
 //        int sign = -1 * offset / offsetAbs;
 //        int shift = (offset < 0) ? 0 : 1;
@@ -141,6 +143,7 @@ public class java1_homework2 {
 //                arrayInt[index + offset] = arrayInt[index];
 //            }
 //        }
+        // смещение "карусель"
         int sign = offset / offsetAbs;
         int startPoint = (offset > 0) ? 0 : length;
         for (int i = 0; i < offsetAbs; i++) {
