@@ -127,6 +127,10 @@ public class java1_homework2 {
     // массивами.
     public static void offsetArray(int[] arrayInt, int offset) {
         System.out.println(Arrays.toString(arrayInt));
+        if (offset == 0) {
+            System.out.println(Arrays.toString(arrayInt));
+            return;
+        }
         int index;
         int length = arrayInt.length;
         int offsetAbs = Math.abs(offset);
@@ -161,7 +165,7 @@ public class java1_homework2 {
         int[] arrayInt1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         offsetArray(arrayInt1, -2);
         int[] arrayInt2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        offsetArray(arrayInt2, 2);
+        offsetArray(arrayInt2, 0);
         System.out.println("-----------");
     }
 
