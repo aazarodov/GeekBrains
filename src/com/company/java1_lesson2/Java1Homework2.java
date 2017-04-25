@@ -2,7 +2,7 @@ package com.company.java1_lesson2;
 
 import java.util.Arrays;
 
-public class java1_homework2 {
+public class Java1Homework2 {
     // 1. Задать целочисленный массив, состоящий из элементов 0 и 1. Например: [ 1, 1, 0, 0, 1, 0, 1, 1,
     // 0, 0 ]. С помощью цикла и условия заменить 0 на 1, 1 на 0;
     public static void exercise1() {
@@ -132,23 +132,24 @@ public class java1_homework2 {
             return;
         }
         int index;
+        int tempOffset = offset % arrayInt.length;
         int length = arrayInt.length;
-        int offsetAbs = Math.abs(offset);
+        int offsetAbs = Math.abs(tempOffset);
 //        // смещение как в побитовых операциях
-//        int startPoint = (offset < 0) ? 0 : arrayInt.length;
-//        int sign = -1 * offset / offsetAbs;
-//        int shift = (offset < 0) ? 0 : 1;
+//        int startPoint = (tempOffset < 0) ? 0 : arrayInt.length;
+//        int sign = -1 * tempOffset / offsetAbs;
+//        int shift = (tempOffset < 0) ? 0 : 1;
 //        for (int i = offsetAbs; i < (arrayInt.length + offsetAbs); i++) {
 //            index = startPoint + sign * i - shift;
 //            if (i >= arrayInt.length) {
-//                arrayInt[index + offset] = 0;
+//                arrayInt[index + tempOffset] = 0;
 //            } else {
-//                arrayInt[index + offset] = arrayInt[index];
+//                arrayInt[index + tempOffset] = arrayInt[index];
 //            }
 //        }
         // смещение "карусель"
-        int sign = offset / offsetAbs;
-        int startPoint = (offset > 0) ? 0 : length;
+        int sign = tempOffset / offsetAbs;
+        int startPoint = (tempOffset > 0) ? 0 : length;
         for (int i = 0; i < offsetAbs; i++) {
             for (int j = 1; j < arrayInt.length; j++) {
                 index = startPoint + sign * j;
@@ -165,7 +166,7 @@ public class java1_homework2 {
         int[] arrayInt1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         offsetArray(arrayInt1, -2);
         int[] arrayInt2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        offsetArray(arrayInt2, 2);
+        offsetArray(arrayInt2, 12);
         System.out.println("-----------");
     }
 
