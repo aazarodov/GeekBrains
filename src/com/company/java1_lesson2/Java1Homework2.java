@@ -132,16 +132,16 @@ public class Java1Homework2 {
             return;
         }
         int index;
-        int tempOffset = offset % arrayInt.length;
         int length = arrayInt.length;
+        int tempOffset = offset % length;
         int offsetAbs = Math.abs(tempOffset);
 //        // смещение как в побитовых операциях
-//        int startPoint = (tempOffset < 0) ? 0 : arrayInt.length;
+//        int startPoint = (tempOffset < 0) ? 0 : length;
 //        int sign = -1 * tempOffset / offsetAbs;
 //        int shift = (tempOffset < 0) ? 0 : 1;
-//        for (int i = offsetAbs; i < (arrayInt.length + offsetAbs); i++) {
+//        for (int i = offsetAbs; i < (length + offsetAbs); i++) {
 //            index = startPoint + sign * i - shift;
-//            if (i >= arrayInt.length) {
+//            if (i >= length) {
 //                arrayInt[index + tempOffset] = 0;
 //            } else {
 //                arrayInt[index + tempOffset] = arrayInt[index];
