@@ -10,11 +10,7 @@ public class Java1Homework2 {
         int[] arrayInt =  {1, 1, 0, 0, 1, 0, 1, 1, 0, 0};
         System.out.println(Arrays.toString(arrayInt));
         for(int i = 0; i < arrayInt.length; i++) {
-            if (arrayInt[i] == 0) {
-                arrayInt[i] = 1;
-            } else {
-                arrayInt[i] = 0;
-            }
+            arrayInt[i] = -(arrayInt[i] - 1);
         }
         System.out.println(Arrays.toString(arrayInt));
         System.out.println("-----------");
