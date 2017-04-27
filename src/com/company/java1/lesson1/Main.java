@@ -1,4 +1,4 @@
-package com.company.java1_lesson1;
+package com.company.java1.lesson1;
 
 public class Main {
 
