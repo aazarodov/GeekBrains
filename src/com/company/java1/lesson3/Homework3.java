@@ -59,21 +59,23 @@ public class Homework3 {
         Scanner sc = new Scanner(System.in);
         System.out.println("Угадай слово!");
         String answer, startsWith;
-        while (true) {
+        boolean win = false;
+        while (!win) {
             startsWith = "###############";
             answer = sc.nextLine();
             if (answer.equals(theWord)) {
                 System.out.println("Поздравляем! Вы угадали слово.");
-                break;
-            }
-            for (int i = 1; i <= answer.length(); i++) {
-                if (theWord.startsWith(answer.substring(0, i))) {
-                    startsWith = (answer.substring(0, i) + "###############").substring(0, 15);
-                } else {
-                    break;
+                win = true;
+            } else {
+                for (int i = 1; i <= answer.length(); i++) {
+                    if (theWord.startsWith(answer.substring(0, i))) {
+                        startsWith = (answer.substring(0, i) + "###############").substring(0, 15);
+                    } else {
+                        break;
+                    }
                 }
+                System.out.println(startsWith);
             }
-            System.out.println(startsWith);
         }
     }
 
