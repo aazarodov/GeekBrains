@@ -9,10 +9,8 @@ public class Homework3 {
     // указанное пользователем число чем загаданное, или меньше. После победы или проигрыша
     // выводится запрос – «Повторить игру еще раз? 1 – да / 0 – нет»(1 – повторить, 0 – нет).
     public static void  exercise1() {
-        int theNumber;
-        int answer = 0;
+        int theNumber, answer = 0, continueGame = 1;
         Scanner sc = new Scanner(System.in);
-        int continueGame = 1;
         while (continueGame == 1) {
             theNumber = new Random().nextInt(10);
             System.out.println("Угадай число!");
