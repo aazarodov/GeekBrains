@@ -1,6 +1,6 @@
 package com.company.java1.lesson1;
 
-public class Homework1 {
+public class Homework {
     public static void main(String[] args) {
         // 2. Создать переменные всех пройденных типов данных, и инициализировать их значения;
         byte b = 127;
