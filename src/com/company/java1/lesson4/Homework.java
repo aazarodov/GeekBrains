@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Homework {
     // данные поля
     public static char[][] map;
-    public static final int SIZE = 4;
+    public static final int SIZE = 3;
     public static final int DOTS_TO_WIN = 3;
     // возможные символы
     public static final char DOT_EMPTY = '•';
@@ -113,7 +113,7 @@ public class Homework {
     }
 
     /** Метод, отвечающий за выбор компьютером одного из углов */
-    public static boolean aiTrySelectAngle(int[] cellXY) {
+    public static boolean aiTrySelectAngle(int[] cell) {
         int[][] arrayCell = new int[4][2];
         int length = 0;
         for (int i = 0; i < SIZE; i = i + (SIZE - 1)) {
@@ -125,16 +125,37 @@ public class Homework {
             }
         }
         if (length > 0) {
-            int cell = random.nextInt(length);
-            cellXY[0] = arrayCell[cell][0];
-            cellXY[1] = arrayCell[cell][1];
+            int index = random.nextInt(length);
+            cell[0] = arrayCell[index][0];
+            cell[1] = arrayCell[index][1];
             return true;
         }
         return false;
     }
 
+    /** Метод, отвечающий за предотвращении победы противника */
+    public static int aiCheckWinHuman(int x, int y, int dX, int dY, int count, int[] cell) {
+        if (!(x == SIZE || y == SIZE)) {
+            if (map[y][x] == humanSymb || map[y][x] == DOT_EMPTY) {
+                if (map[y][x] == humanSymb) {
+                    count++;
+                }
+                count = aiCheckWinHuman((x + dX), (y + dY), dX, dY, count, cell);
+                if (count == (SIZE - 1)) {
+                    if (map[y][x] == DOT_EMPTY) {
+                        cell[0] = x;
+                        cell[1] = y;
+                    }
+                }
+            } else {
+                return -1;
+            }
+        }
+        return count;
+    }
+
     /** Метод, отвечающий за выбор следующей ячейки в последовательности */
-    public static boolean aiCheckNextCell(int x, int y, int dX, int dY, int count) {
+    public static int aiCheckNextCell(int x, int y, int dX, int dY, int count) {
         if (x == SIZE || y == SIZE) {
             if (arrayPossibleCell[count] == null) {
                 arrayPossibleCell[count] = new int[SIZE * SIZE][2];
@@ -143,13 +164,13 @@ public class Homework {
                     arrayPossibleCell[count][i][1] = -1;
                 }
             }
-            return true;
         } else {
             if (map[y][x] == aiSymb || map[y][x] == DOT_EMPTY) {
                 if (map[y][x] == aiSymb) {
                     count++;
                 }
-                if (aiCheckNextCell((x + dX), (y + dY), dX, dY, count)) {
+                count = aiCheckNextCell((x + dX), (y + dY), dX, dY, count);
+                if (count >= 0) {
                     if (map[y][x] == DOT_EMPTY) {
                         for (int i = 0; i < arrayPossibleCell[count].length; i++) {
                             if (arrayPossibleCell[count][i][0] == -1) {
@@ -159,28 +180,40 @@ public class Homework {
                             }
                         }
                     }
-                    return true;
                 }
+            } else {
+                return -1;
             }
         }
-        return false;
+        return count;
     }
 
     /** Метод, отвечающий за выбор следующей ячейки в последовательности */
     public static boolean aiSelectNextCell(int[] cell) {
-        arrayPossibleCell = new int[SIZE - 1][][];
-        Integer count = 0;
-        // строки и столбцы
-        for (int i = 0; i < SIZE ; i++) {
-            aiCheckNextCell(i, 0, 0, 1, count);
-            count = 0;
-            aiCheckNextCell(0, i, 1, 0, count);
+        boolean stopWinHuman = false;
+        for (int i = 0; !stopWinHuman && i < SIZE ; i++) {
+            stopWinHuman = aiCheckWinHuman(i, 0, 0, 1, 0, cell) == (SIZE - 1);
+            stopWinHuman = stopWinHuman || aiCheckWinHuman(0, i, 1, 0, 0, cell) == (SIZE - 1);
         }
         // диагонали
-        count = 0;
-        aiCheckNextCell(0, 0, 1, 1, count);
-        count = 0;
-        aiCheckNextCell(SIZE - 1, 0, -1, 1, count);
+        if (!stopWinHuman) {
+            aiCheckWinHuman(0, 0, 1, 1, 0, cell);
+        }
+        if (!stopWinHuman) {
+            aiCheckWinHuman(SIZE - 1, 0, -1, 1, 0, cell);
+        }
+        if (stopWinHuman) {
+            return true;
+        }
+        arrayPossibleCell = new int[SIZE][][];
+        // строки и столбцы
+        for (int i = 0; i < SIZE ; i++) {
+            aiCheckNextCell(i, 0, 0, 1, 0);
+            aiCheckNextCell(0, i, 1, 0, 0);
+        }
+        // диагонали
+        aiCheckNextCell(0, 0, 1, 1, 0);
+        aiCheckNextCell(SIZE - 1, 0, -1, 1, 0);
 
         for (int i = arrayPossibleCell.length - 1; i >= 0; i--) {
             if (arrayPossibleCell[i] != null) {
@@ -194,12 +227,11 @@ public class Homework {
                     int index = random.nextInt(length);
                     cell[0] = arrayPossibleCell[i][index][0];
                     cell[1] = arrayPossibleCell[i][index][1];
-                    break;
+                    return true;
                 }
             }
         }
-
-        return true;
+        return false;
     }
 
     /** Метод, отвечающий за выбор случайной ячейки */
@@ -222,12 +254,14 @@ public class Homework {
                     aiSelectRandomCell(cell);
                 }
             }
-        } else if (SIZE % 2 > 0 && map[SIZE % 2][SIZE % 2] == aiSymb) {
-            if (!aiTrySelectAngle(cell)) {
+//        } else if (SIZE % 2 > 0 && map[SIZE % 2][SIZE % 2] == aiSymb) {
+//            if (!aiTrySelectAngle(cell)) {
+//                aiSelectRandomCell(cell);
+//            }
+        } else {
+            if (!aiSelectNextCell(cell)) {
                 aiSelectRandomCell(cell);
             }
-        } else {
-            aiSelectNextCell(cell);
         }
         return true;
     }
@@ -236,11 +270,13 @@ public class Homework {
     public static void aiTurn() {
         int x, y;
         int[] cell = new int[2];
+        cell[0] = -1;
+        cell[1] = -1;
         aiSelectCell(cell);
         x = cell[0];
         y = cell[1];
         System.out.println("Хожу в (" + (x + 1) + ", " + (y + 1)  + ")");
-        map[x][y] = aiSymb;
+        map[y][x] = aiSymb;
         countEmpty--;
     }
 
