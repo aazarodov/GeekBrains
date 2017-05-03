@@ -10,22 +10,22 @@ import java.util.Scanner;
 public class Homework {
     /** игровая карта */
     public static char[][] map;
-    /** размер карты */
+    /** Размер карты */
     public static final int SIZE = 5;
-    /** количество победных (не используется) */
+    /** Количество победных (не используется) */
     public static final int DOTS_TO_WIN = 3;
-    /** символ ячейки, доступной для хода */
+    /** Символ ячейки, доступной для хода */
     public static final char DOT_EMPTY = '•';
-    /** символ крестик */
+    /** Символ "крестик" */
     public static final char DOT_X = 'X';
-    /** символ нолик */
+    /** Символ "нолик" */
     public static final char DOT_O = 'O';
-    // данные игры
+    // Данные игры
     public static char humanSymb, aiSymb;
     public static boolean stepHuman = false;
     public static byte countEmpty = SIZE * SIZE;
     public static int[][][] arrayPossibleCell;
-    // вспомогательные данные
+    // Вспомогательные данные
     public static Scanner sc = new Scanner(System.in);
     public static Random random = new Random();
 
