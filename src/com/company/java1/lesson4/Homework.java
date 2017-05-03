@@ -8,13 +8,17 @@ import java.util.Scanner;
  * @version 1.0
  */
 public class Homework {
-    // данные поля
+    /** игровая карта */
     public static char[][] map;
-    public static final int SIZE = 3;
+    /** размер карты */
+    public static final int SIZE = 5;
+    /** количество победных (не используется) */
     public static final int DOTS_TO_WIN = 3;
-    // возможные символы
+    /** символ ячейки, доступной для хода */
     public static final char DOT_EMPTY = '•';
+    /** символ крестик */
     public static final char DOT_X = 'X';
+    /** символ нолик */
     public static final char DOT_O = 'O';
     // данные игры
     public static char humanSymb, aiSymb;
@@ -70,6 +74,7 @@ public class Homework {
      * @return возвращает true, если есть победная ситуация, иначе false
      */
     public static boolean isWin(int x, int y, int dX, int dY, char symb) {
+        // если достигли конца последовательности
         if (x == SIZE || y == SIZE) {
             return true;
         } else {
@@ -84,12 +89,12 @@ public class Homework {
      */
     public static boolean checkWin(char symb) {
         boolean win = false;
-        // строки и столбцы
+        // проверим строки и столбцы на победную ситуацию
         for (int i = 0; !win && i < SIZE ; i++) {
             win = win || isWin(i, 0, 0, 1, symb)
                     || isWin(0, i, 1, 0, symb);
         }
-        // диагонали
+        // проверим диагонали на победную ситуацию
         win = win || isWin(0, 0, 1, 1, symb)
                 || isWin(SIZE - 1, 0, -1, 1, symb);
         return win;
@@ -112,7 +117,9 @@ public class Homework {
         return false;
     }
 
-    /** Метод, отвечающий за выбор компьютером одного из углов */
+    /** Метод, отвечающий за выбор компьютером одного из углов
+     * @param cell массив для координат X, Y
+     */
     public static boolean aiTrySelectAngle(int[] cell) {
         int[][] arrayCell = new int[4][2];
         int length = 0;
@@ -133,8 +140,17 @@ public class Homework {
         return false;
     }
 
-    /** Метод, отвечающий за предотвращении победы противника */
+    /** Метод, отвечающий за предотвращении победы противника
+     * @param x координата ячейки
+     * @param y координата ячейки
+     * @param dX приращение координаты x
+     * @param dY приращение координаты y
+     * @param count количество символов противника в последовательности
+     * @param cell массив для координат X, Y
+     * @return возвращает количество символов противника в последовательности (-1 - последовательность не рассматривается)
+     */
     public static int aiCheckWinHuman(int x, int y, int dX, int dY, int count, int[] cell) {
+        // если не достигли конца последовательности
         if (!(x == SIZE || y == SIZE)) {
             if (map[y][x] == humanSymb || map[y][x] == DOT_EMPTY) {
                 if (map[y][x] == humanSymb) {
@@ -154,10 +170,20 @@ public class Homework {
         return count;
     }
 
-    /** Метод, отвечающий за выбор следующей ячейки в последовательности */
+    /** Метод, отвечающий за выбор следующей ячейки в последовательности
+     * @param x координата ячейки
+     * @param y координата ячейки
+     * @param dX приращение координаты x
+     * @param dY приращение координаты y
+     * @param count количество своих символов в последовательности
+     * @return возвращает количество своих символов в последовательности (-1 - последовательность не рассматривается)
+     */
     public static int aiCheckNextCell(int x, int y, int dX, int dY, int count) {
+        // если достигли конца последовательности
         if (x == SIZE || y == SIZE) {
+            // если массив с количеством символом компьютера еще не инициализирован
             if (arrayPossibleCell[count] == null) {
+                // инициализируем массив
                 arrayPossibleCell[count] = new int[SIZE * SIZE][2];
                 for (int i = 0; i < arrayPossibleCell[count].length; i++) {
                     arrayPossibleCell[count][i][0] = -1;
@@ -165,11 +191,14 @@ public class Homework {
                 }
             }
         } else {
+            // текущий символ последовательности пустой или компьютера
             if (map[y][x] == aiSymb || map[y][x] == DOT_EMPTY) {
                 if (map[y][x] == aiSymb) {
                     count++;
                 }
                 count = aiCheckNextCell((x + dX), (y + dY), dX, dY, count);
+                // если в последовательности не встретились символы человека,
+                // добавим текущую ячейку в массив к выбору
                 if (count >= 0) {
                     if (map[y][x] == DOT_EMPTY) {
                         for (int i = 0; i < arrayPossibleCell[count].length; i++) {
@@ -188,41 +217,50 @@ public class Homework {
         return count;
     }
 
-    /** Метод, отвечающий за выбор следующей ячейки в последовательности */
+    /** Метод, отвечающий за выбор следующей ячейки в последовательности
+     * @param cell массив для координат X, Y
+     * @return возвращает true или false, в зависимости удалось определить след. ячейку или нет
+     */
     public static boolean aiSelectNextCell(int[] cell) {
         boolean stopWinHuman = false;
+        // проверим строки и столбцы на победу человека при след. ходе
         for (int i = 0; !stopWinHuman && i < SIZE ; i++) {
             stopWinHuman = aiCheckWinHuman(i, 0, 0, 1, 0, cell) == (SIZE - 1);
             stopWinHuman = stopWinHuman || aiCheckWinHuman(0, i, 1, 0, 0, cell) == (SIZE - 1);
         }
-        // диагонали
+        // проверим диагонали на победу человека при след. ходе
         if (!stopWinHuman) {
             aiCheckWinHuman(0, 0, 1, 1, 0, cell);
         }
         if (!stopWinHuman) {
             aiCheckWinHuman(SIZE - 1, 0, -1, 1, 0, cell);
         }
+        // если есть победная последовательности человека в след. ходе,
+        // не ищем других ячеек, останавливаемся на найденной
         if (stopWinHuman) {
             return true;
         }
         arrayPossibleCell = new int[SIZE][][];
-        // строки и столбцы
+        // проверим строки и столбцы на победу компьютера при тек. ходе
         for (int i = 0; i < SIZE ; i++) {
             aiCheckNextCell(i, 0, 0, 1, 0);
             aiCheckNextCell(0, i, 1, 0, 0);
         }
-        // диагонали
+        // проверим диагонали на победу компьютера при тек. ходе
         aiCheckNextCell(0, 0, 1, 1, 0);
         aiCheckNextCell(SIZE - 1, 0, -1, 1, 0);
-
+        // если есть ячейки для выбора, то отберем с конца массива
+        // т.к. в конце ячейки с бОльшим количеством своих символов в последовательностях
         for (int i = arrayPossibleCell.length - 1; i >= 0; i--) {
             if (arrayPossibleCell[i] != null) {
                 int length = 0;
+                // найдем количество доступных ячеек
                 for (int j = 0; j < arrayPossibleCell[i].length; j++) {
                     if (arrayPossibleCell[i][j][0] > -1) {
                         length++;
                     }
                 }
+                // если доступные ячейки есть, берем случаную
                 if (length > 0) {
                     int index = random.nextInt(length);
                     cell[0] = arrayPossibleCell[i][index][0];
@@ -231,48 +269,52 @@ public class Homework {
                 }
             }
         }
+        // если не удалось найти подходящих ячеек, вернем false
         return false;
     }
 
-    /** Метод, отвечающий за выбор случайной ячейки */
-    public static boolean aiSelectRandomCell(int[] cell) {
+    /** Метод, отвечающий за выбор случайной ячейки
+     * @rerurn массив координат X, Y
+     */
+    public static int[] aiSelectRandomCell() {
+        int[] cell = new int[2];
         do {
             cell[0] = random.nextInt(SIZE);
             cell[1] = random.nextInt(SIZE);
         } while (!isCellValid(cell[0], cell[1]));
-        return true;
+        return cell;
     }
 
-    /** Метод, отвечающий за выбор компьютером ячейки */
-    public static boolean aiSelectCell(int[] cell) {
+    /** Метод, отвечающий за выбор компьютером ячейки
+     * @return массив координат X, Y
+     */
+    public static int[] aiSelectCell() {
+        int[] cell = new int[2];
+        // это начало игры
         if (countEmpty == SIZE * SIZE) {
+            // игровая карта нечетная, выберем центр в качестве первого хода
             if (SIZE % 2 > 0) {
-                cell[0] = SIZE % 2;
+                cell[0] = SIZE / 2;
                 cell[1] = cell[0];
+            // игровая карта четная, попробуем выбрать угол, иначе случайную ячейку
             } else {
                 if (!aiTrySelectAngle(cell)) {
-                    aiSelectRandomCell(cell);
+                    cell = aiSelectRandomCell();
                 }
             }
-//        } else if (SIZE % 2 > 0 && map[SIZE % 2][SIZE % 2] == aiSymb) {
-//            if (!aiTrySelectAngle(cell)) {
-//                aiSelectRandomCell(cell);
-//            }
         } else {
             if (!aiSelectNextCell(cell)) {
-                aiSelectRandomCell(cell);
+                cell = aiSelectRandomCell();
             }
         }
-        return true;
+        return cell;
     }
 
     /** Метод, отвечающий за ход компьютера */
     public static void aiTurn() {
         int x, y;
         int[] cell = new int[2];
-        cell[0] = -1;
-        cell[1] = -1;
-        aiSelectCell(cell);
+        cell = aiSelectCell();
         x = cell[0];
         y = cell[1];
         System.out.println("Хожу в (" + (x + 1) + ", " + (y + 1)  + ")");
@@ -297,7 +339,7 @@ public class Homework {
         String answer = "";
         String dot_x = String.valueOf(DOT_X), dot_o = String.valueOf(DOT_O);
         while (!answer.equals(dot_x) && !answer.equals(dot_o)) {
-            System.out.println("Крестик или нолик (ответ: X или O - англ. буквы)?");
+            System.out.println("Крестик или нолик (ответ: " + DOT_X + " или " + DOT_O + " - англ. буквы)?");
             answer = sc.nextLine();
         }
         humanSymb = answer.charAt(0);
@@ -314,11 +356,12 @@ public class Homework {
      * @param args Массив строковых аргументов
      */
     public static void main(String[] args) {
-        // инициализируем и отрисуем карту
+        // инициализируем
         initMap();
-        printMap();
         // попросим пользователя выбрать себе символ
         selectSymbolUser();
+        // отрисуем карту
+        printMap();
         // игра
         while (true) {
             if (stepHuman) {
