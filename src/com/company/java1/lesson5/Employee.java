@@ -75,9 +75,4 @@ public class Employee {
                 System.out.println(empl);
         }
     }
-
-    public static void main(String[] args) {
-        Employee[] emplArray = getEmployeeArray();
-        printEmployeeOver60(emplArray);
-    }
 }
