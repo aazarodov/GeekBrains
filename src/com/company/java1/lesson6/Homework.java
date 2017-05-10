@@ -20,5 +20,6 @@ public class Homework {
         jack.swim(11);
         jack.jump(0.5);
         jack.jump(0.6);
+        
     }
 }
