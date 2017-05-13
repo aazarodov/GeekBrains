@@ -10,6 +10,7 @@ public class Homework {
         arrayOfCat[2] = new Cat("Vaska", (int) (Math.random() * 100));
         arrayOfCat[3] = new Cat("Tima", (int) (Math.random() * 100));
         arrayOfCat[4] = new Cat("Matroskin", (int) (Math.random() * 100));
+
         for (int i = 0; i < arrayOfCat.length; i++) {
             arrayOfCat[i].eat(bowl);
         }
