@@ -7,11 +7,13 @@ public class Homework {
         barsik.run(150);
         barsik.swim(100);
         barsik.jump(2);
+
         Cat vaska = new Cat("Vaska");
         System.out.println(vaska);
         vaska.run(300);
         vaska.swim(1);
         vaska.jump(3);
+        
         Dog jack = new Dog("Jack", 400, 10, 0.5);
         System.out.println(jack);
         jack.run(300);
