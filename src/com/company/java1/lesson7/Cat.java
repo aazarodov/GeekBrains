@@ -10,22 +10,11 @@ public class Cat {
         this.appetite = appetite;
     }
 
-    public boolean eat(Bowl bowl) {
+    public void eat(Bowl bowl) {
         if (!satiety) {
-            if (bowl.decreaseFood(appetite)) {
-                System.out.println(name + ": " + "я наелся!");
-            } else {
-                System.out.println(name + ": " + "мне этого мало!");
-                return false;
-            }
-        } else {
-            System.out.println(name + ": " + "я не хочу есть!");
+            satiety = bowl.decreaseFood(appetite);
         }
-        return true;
-    }
-
-    public boolean isSatiety() {
-        return satiety;
+        System.out.println(this);
     }
 
     @Override
@@ -33,7 +22,7 @@ public class Cat {
         return "Кот{" +
                 "Имя='" + name + '\'' +
                 ", Аппетит=" + appetite +
-                ", Сытость=" + satiety +
+                ", " + ((satiety) ? "Я сыт!" : "Я голоден!") +
                 '}';
     }
 }
