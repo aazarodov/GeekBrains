@@ -13,7 +13,7 @@ public class Homework {
         vaska.run(300);
         vaska.swim(1);
         vaska.jump(3);
-        
+
         Dog jack = new Dog("Jack", 400, 10, 0.5);
         System.out.println(jack);
         jack.run(300);
