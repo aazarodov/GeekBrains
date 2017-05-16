@@ -21,11 +21,14 @@ public class AgentAI {
     private boolean stepHuman;
     private int countEmpty;
     private int[][][] arrayPossibleCell;
+    private String textFinish = "";
+    private boolean GameOver = false;
     // Вспомогательные данные
     public static Random random = new Random();
 
     public AgentAI(int size, char humanSymb) {
         this.size = size;
+        this.humanSymb = humanSymb;
         if (humanSymb == DOT_X) {
             this.aiSymb = DOT_O;
             this.stepHuman = true;
@@ -42,6 +45,14 @@ public class AgentAI {
 
     public char getAiSymb() {
         return aiSymb;
+    }
+
+    public boolean isGameOver() {
+        return GameOver;
+    }
+
+    public String getTextFinish() {
+        return textFinish;
     }
 
     /** Метод, отвечающий за проверку ячейки на возможность установки символа
@@ -95,16 +106,16 @@ public class AgentAI {
      */
     public boolean isGameEnd(char[][] map) {
         if (countEmpty == 0) {
-            System.out.println("Ничья.");
-            return true;
+            textFinish = "Ничья.";
+            GameOver = true;
         } else if (checkWin(map, humanSymb)) {
-            System.out.println("Поздравляем! Вы победили.");
-            return true;
+            textFinish = "Поздравляем! Вы победили.";
+            GameOver = true;
         } else if (checkWin(map, aiSymb)) {
-            System.out.println("Победил компьютер!");
-            return true;
+            textFinish = "Победил компьютер!";
+            GameOver = true;
         }
-        return false;
+        return GameOver;
     }
 
     /** Метод, отвечающий за выбор компьютером одного из углов
@@ -220,15 +231,10 @@ public class AgentAI {
         }
         // проверим диагонали на победу человека при след. ходе
         if (!stopWinHuman) {
-            aiCheckWinHuman(map, 0, 0, 1, 1, 0, cell);
+            stopWinHuman = aiCheckWinHuman(map, 0, 0, 1, 1, 0, cell) == (size - 1);
         }
         if (!stopWinHuman) {
-            aiCheckWinHuman(map, size - 1, 0, -1, 1, 0, cell);
-        }
-        // если есть победная последовательности человека в след. ходе,
-        // не ищем других ячеек, останавливаемся на найденной
-        if (stopWinHuman) {
-            return true;
+            stopWinHuman = aiCheckWinHuman(map, size - 1, 0, -1, 1, 0, cell) == (size - 1);
         }
         arrayPossibleCell = new int[size][][];
         // проверим строки и столбцы на победу компьютера при тек. ходе
@@ -253,8 +259,12 @@ public class AgentAI {
                 // если доступные ячейки есть, берем случаную
                 if (length > 0) {
                     int index = random.nextInt(length);
-                    cell[0] = arrayPossibleCell[i][index][0];
-                    cell[1] = arrayPossibleCell[i][index][1];
+                    // если есть победная комбинация компьютера текущим ходом
+                    // или не победная ситуация человека в следующем ходе
+                    if (stopWinHuman && (i == arrayPossibleCell.length - 1) || !stopWinHuman) {
+                            cell[0] = arrayPossibleCell[i][index][0];
+                            cell[1] = arrayPossibleCell[i][index][1];
+                    }
                     return true;
                 }
             }
@@ -303,15 +313,14 @@ public class AgentAI {
     /** Метод, отвечающий за ход компьютера */
     public int[] aiTurn(char[][] map) {
         int x, y;
-        int[] cell = new int[2];
-        cell = aiSelectCell(map);
+        int[] cell = aiSelectCell(map);
         x = cell[0];
         y = cell[1];
         System.out.println("Хожу в (" + (x + 1) + ", " + (y + 1)  + ")");
         map[y][x] = aiSymb;
         countEmpty--;
         stepHuman = !stepHuman;
-        return cell;
+        return  cell;
     }
 
     /** Метод, отвечающий за ход пользователя */
@@ -320,22 +329,4 @@ public class AgentAI {
         countEmpty--;
     }
 
-    /** Точка входа в класс и приложение
-     * @param args Массив строковых аргументов
-     */
-    public static void main(String[] args) {
-        // игра
-//        while (true) {
-//            if (stepHuman) {
-//                humanTurn();
-//            } else {
-//                aiTurn();
-//            }
-//            printMap();
-//            if (isGameEnd()) {
-//                break;
-//            }
-//            stepHuman = !stepHuman;
-//        }
-    }
 }

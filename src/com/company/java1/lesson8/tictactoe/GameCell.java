@@ -19,15 +19,18 @@ public class GameCell extends JPanel {
         repaint();
     }
 
+
     public void paintComponent(Graphics g) {
         g.setColor(Color.BLACK);
         width = getWidth();
         height = getHeight();
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(10.0f));
         if (symbol == 'X') {
-            g.drawLine(10, 10, width - 10, height - 10);
-            g.drawLine(10, height - 10, width - 10, 10);
+            g2.drawLine(10, 10, width - 10, height - 10);
+            g2.drawLine(10, height - 10, width - 10, 10);
         } else if (symbol == 'O') {
-            g.drawOval(10, 10, width - 20, height - 20);
+            g2.drawOval(10, 10, width - 20, height - 20);
         }
     }
 }
