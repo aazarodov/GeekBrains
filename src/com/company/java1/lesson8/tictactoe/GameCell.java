@@ -16,6 +16,7 @@ public class GameCell extends JPanel {
 
     public void setSymbol(char symbol) {
         this.symbol = symbol;
+        repaint();
     }
 
     public void paintComponent(Graphics g) {

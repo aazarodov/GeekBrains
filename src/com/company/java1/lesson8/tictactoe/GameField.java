@@ -61,11 +61,8 @@ public class GameField extends JPanel {
                         if (component instanceof GameCell) {
                             if (((GameCell) component).getSymbol() == 0) {
                                 ((GameCell) component).setSymbol(humanSymb);
-                                ((GameCell) component).repaint();
                             }
                         }
-                        //System.out.println(Arrays.toString());
-
                     }
                 });
                 panelRow.add(jCell, BorderLayout.WEST);
