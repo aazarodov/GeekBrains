@@ -1,4 +1,4 @@
-package com.company.java1.test;
+package com.company.java1.lesson8.tictactoe;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -18,17 +18,30 @@ public class AgentAI {
     public static final char DOT_O = 'O';
     // Данные игры
     private char humanSymb, aiSymb;
-    private boolean stepHuman = false;
+    private boolean stepHuman;
     private int countEmpty;
     private int[][][] arrayPossibleCell;
     // Вспомогательные данные
-    public static Scanner sc = new Scanner(System.in);
     public static Random random = new Random();
 
-    public AgentAI(int size, char aiSymb) {
+    public AgentAI(int size, char humanSymb) {
         this.size = size;
-        this.aiSymb = aiSymb;
+        if (humanSymb == DOT_X) {
+            this.aiSymb = DOT_O;
+            this.stepHuman = true;
+        } else {
+            this.aiSymb = DOT_X;
+            this.stepHuman = false;
+        }
         this.countEmpty = size * size;
+    }
+
+    public boolean isStepHuman() {
+        return stepHuman;
+    }
+
+    public char getAiSymb() {
+        return aiSymb;
     }
 
     /** Метод, отвечающий за проверку ячейки на возможность установки символа
@@ -36,8 +49,8 @@ public class AgentAI {
      * @param y координата ячейки
      * @return возвращает true, если возможно установить символ, иначе false
      */
-    public static boolean isCellValid(char[][] map, int x, int y) {
-        if (x < 0 || x >= SIZE || y < 0 || y >= SIZE) return false;
+    public boolean isCellValid(char[][] map, int x, int y) {
+        if (x < 0 || x >= size || y < 0 || y >= size) return false;
         if (map[y][x] == DOT_EMPTY) return true;
         return false;
     }
@@ -50,9 +63,9 @@ public class AgentAI {
      * @param symb проверяемый символ
      * @return возвращает true, если есть победная ситуация, иначе false
      */
-    public static boolean isWin(char[][] map, int x, int y, int dX, int dY, char symb) {
+    public boolean isWin(char[][] map, int x, int y, int dX, int dY, char symb) {
         // если достигли конца последовательности
-        if (x == SIZE || y == SIZE) {
+        if (x == size || y == size) {
             return true;
         } else {
             boolean nextDot = isWin(map, (x + dX), (y + dY), dX, dY, symb);
@@ -64,30 +77,30 @@ public class AgentAI {
      * @param symb проверяемый символ
      * @return возвращает true, если есть победная ситуация, иначе false
      */
-    public static boolean checkWin(char[][] map, char symb) {
+    public boolean checkWin(char[][] map, char symb) {
         boolean win = false;
         // проверим строки и столбцы на победную ситуацию
-        for (int i = 0; !win && i < SIZE ; i++) {
+        for (int i = 0; !win && i < size ; i++) {
             win = win || isWin(map, i, 0, 0, 1, symb)
                     || isWin(map, 0, i, 1, 0, symb);
         }
         // проверим диагонали на победную ситуацию
         win = win || isWin(map, 0, 0, 1, 1, symb)
-                || isWin(map, SIZE - 1, 0, -1, 1, symb);
+                || isWin(map, size - 1, 0, -1, 1, symb);
         return win;
     }
 
     /** Метод, отвечающий за проверку окончания игры
      * @return возвращает true, если игра окончена, иначе false
      */
-    public static boolean isGameEnd() {
+    public boolean isGameEnd(char[][] map) {
         if (countEmpty == 0) {
             System.out.println("Ничья.");
             return true;
-        } else if (checkWin(humanSymb)) {
+        } else if (checkWin(map, humanSymb)) {
             System.out.println("Поздравляем! Вы победили.");
             return true;
-        } else if (checkWin(aiSymb)) {
+        } else if (checkWin(map, aiSymb)) {
             System.out.println("Победил компьютер!");
             return true;
         }
@@ -97,11 +110,11 @@ public class AgentAI {
     /** Метод, отвечающий за выбор компьютером одного из углов
      * @param cell массив для координат X, Y
      */
-    public static boolean aiTrySelectAngle(int[] cell) {
+    public boolean aiTrySelectAngle(char[][] map, int[] cell) {
         int[][] arrayCell = new int[4][2];
         int length = 0;
-        for (int i = 0; i < SIZE; i = i + (SIZE - 1)) {
-            for (int j = 0; j < SIZE; j = j + (SIZE - 1)) {
+        for (int i = 0; i < size; i = i + (size - 1)) {
+            for (int j = 0; j < size; j = j + (size - 1)) {
                 if (map[i][j] == DOT_EMPTY) {
                     arrayCell[length][0] = i;
                     arrayCell[length++][1] = j;
@@ -126,15 +139,15 @@ public class AgentAI {
      * @param cell массив для координат X, Y
      * @return возвращает количество символов противника в последовательности (-1 - последовательность не рассматривается)
      */
-    public static int aiCheckWinHuman(int x, int y, int dX, int dY, int count, int[] cell) {
+    public int aiCheckWinHuman(char[][] map, int x, int y, int dX, int dY, int count, int[] cell) {
         // если не достигли конца последовательности
-        if (!(x == SIZE || y == SIZE)) {
+        if (!(x == size || y == size)) {
             if (map[y][x] == humanSymb || map[y][x] == DOT_EMPTY) {
                 if (map[y][x] == humanSymb) {
                     count++;
                 }
-                count = aiCheckWinHuman((x + dX), (y + dY), dX, dY, count, cell);
-                if (count == (SIZE - 1)) {
+                count = aiCheckWinHuman(map, (x + dX), (y + dY), dX, dY, count, cell);
+                if (count == (size - 1)) {
                     if (map[y][x] == DOT_EMPTY) {
                         cell[0] = x;
                         cell[1] = y;
@@ -155,13 +168,13 @@ public class AgentAI {
      * @param count количество своих символов в последовательности
      * @return возвращает количество своих символов в последовательности (-1 - последовательность не рассматривается)
      */
-    public static int aiCheckNextCell(int x, int y, int dX, int dY, int count) {
+    public int aiCheckNextCell(char[][] map, int x, int y, int dX, int dY, int count) {
         // если достигли конца последовательности
-        if (x == SIZE || y == SIZE) {
+        if (x == size || y == size) {
             // если массив с количеством символом компьютера еще не инициализирован
             if (arrayPossibleCell[count] == null) {
                 // инициализируем массив
-                arrayPossibleCell[count] = new int[SIZE * SIZE][2];
+                arrayPossibleCell[count] = new int[size * size][2];
                 for (int i = 0; i < arrayPossibleCell[count].length; i++) {
                     arrayPossibleCell[count][i][0] = -1;
                     arrayPossibleCell[count][i][1] = -1;
@@ -173,7 +186,7 @@ public class AgentAI {
                 if (map[y][x] == aiSymb) {
                     count++;
                 }
-                count = aiCheckNextCell((x + dX), (y + dY), dX, dY, count);
+                count = aiCheckNextCell(map, (x + dX), (y + dY), dX, dY, count);
                 // если в последовательности не встретились символы человека,
                 // добавим текущую ячейку в массив к выбору
                 if (count >= 0) {
@@ -198,34 +211,34 @@ public class AgentAI {
      * @param cell массив для координат X, Y
      * @return возвращает true или false, в зависимости удалось определить след. ячейку или нет
      */
-    public static boolean aiSelectNextCell(int[] cell) {
+    public boolean aiSelectNextCell(char[][] map, int[] cell) {
         boolean stopWinHuman = false;
         // проверим строки и столбцы на победу человека при след. ходе
-        for (int i = 0; !stopWinHuman && i < SIZE ; i++) {
-            stopWinHuman = aiCheckWinHuman(i, 0, 0, 1, 0, cell) == (SIZE - 1);
-            stopWinHuman = stopWinHuman || aiCheckWinHuman(0, i, 1, 0, 0, cell) == (SIZE - 1);
+        for (int i = 0; !stopWinHuman && i < size ; i++) {
+            stopWinHuman = aiCheckWinHuman(map, i, 0, 0, 1, 0, cell) == (size - 1);
+            stopWinHuman = stopWinHuman || aiCheckWinHuman(map, 0, i, 1, 0, 0, cell) == (size - 1);
         }
         // проверим диагонали на победу человека при след. ходе
         if (!stopWinHuman) {
-            aiCheckWinHuman(0, 0, 1, 1, 0, cell);
+            aiCheckWinHuman(map, 0, 0, 1, 1, 0, cell);
         }
         if (!stopWinHuman) {
-            aiCheckWinHuman(SIZE - 1, 0, -1, 1, 0, cell);
+            aiCheckWinHuman(map, size - 1, 0, -1, 1, 0, cell);
         }
         // если есть победная последовательности человека в след. ходе,
         // не ищем других ячеек, останавливаемся на найденной
         if (stopWinHuman) {
             return true;
         }
-        arrayPossibleCell = new int[SIZE][][];
+        arrayPossibleCell = new int[size][][];
         // проверим строки и столбцы на победу компьютера при тек. ходе
-        for (int i = 0; i < SIZE ; i++) {
-            aiCheckNextCell(i, 0, 0, 1, 0);
-            aiCheckNextCell(0, i, 1, 0, 0);
+        for (int i = 0; i < size ; i++) {
+            aiCheckNextCell(map, i, 0, 0, 1, 0);
+            aiCheckNextCell(map, 0, i, 1, 0, 0);
         }
         // проверим диагонали на победу компьютера при тек. ходе
-        aiCheckNextCell(0, 0, 1, 1, 0);
-        aiCheckNextCell(SIZE - 1, 0, -1, 1, 0);
+        aiCheckNextCell(map, 0, 0, 1, 1, 0);
+        aiCheckNextCell(map, size - 1, 0, -1, 1, 0);
         // если есть ячейки для выбора, то отберем с конца массива
         // т.к. в конце ячейки с бОльшим количеством своих символов в последовательностях
         for (int i = arrayPossibleCell.length - 1; i >= 0; i--) {
@@ -253,104 +266,76 @@ public class AgentAI {
     /** Метод, отвечающий за выбор случайной ячейки
      * @rerurn массив координат X, Y
      */
-    public static int[] aiSelectRandomCell() {
+    public int[] aiSelectRandomCell(char[][] map) {
         int[] cell = new int[2];
         do {
-            cell[0] = random.nextInt(SIZE);
-            cell[1] = random.nextInt(SIZE);
-        } while (!isCellValid(cell[0], cell[1]));
+            cell[0] = random.nextInt(size);
+            cell[1] = random.nextInt(size);
+        } while (!isCellValid(map, cell[0], cell[1]));
         return cell;
     }
 
     /** Метод, отвечающий за выбор компьютером ячейки
      * @return массив координат X, Y
      */
-    public static int[] aiSelectCell() {
+    public int[] aiSelectCell(char[][] map) {
         int[] cell = new int[2];
         // это начало игры
-        if (countEmpty == SIZE * SIZE) {
+        if (countEmpty == size * size) {
             // игровая карта нечетная, выберем центр в качестве первого хода
-            if (SIZE % 2 > 0) {
-                cell[0] = SIZE / 2;
+            if (size % 2 > 0) {
+                cell[0] = size / 2;
                 cell[1] = cell[0];
                 // игровая карта четная, попробуем выбрать угол, иначе случайную ячейку
             } else {
-                if (!aiTrySelectAngle(cell)) {
-                    cell = aiSelectRandomCell();
+                if (!aiTrySelectAngle(map, cell)) {
+                    cell = aiSelectRandomCell(map);
                 }
             }
         } else {
-            if (!aiSelectNextCell(cell)) {
-                cell = aiSelectRandomCell();
+            if (!aiSelectNextCell(map, cell)) {
+                cell = aiSelectRandomCell(map);
             }
         }
         return cell;
     }
 
     /** Метод, отвечающий за ход компьютера */
-    public static void aiTurn() {
+    public int[] aiTurn(char[][] map) {
         int x, y;
         int[] cell = new int[2];
-        cell = aiSelectCell();
+        cell = aiSelectCell(map);
         x = cell[0];
         y = cell[1];
         System.out.println("Хожу в (" + (x + 1) + ", " + (y + 1)  + ")");
         map[y][x] = aiSymb;
         countEmpty--;
+        stepHuman = !stepHuman;
+        return cell;
     }
 
     /** Метод, отвечающий за ход пользователя */
-    public static void humanTurn() {
-        int x, y;
-        do {
-            System.out.println("Введите координаты в формате X Y");
-            x = sc.nextInt() - 1;
-            y = sc.nextInt() - 1;
-        } while (!isCellValid(x, y));
-        map[y][x] = humanSymb;
+    public void humanTurn(char[][] map, int[] cell) {
+        map[cell[1]][cell[0]] = humanSymb;
         countEmpty--;
-    }
-
-    /** Метод, отвечающий за выбор пользователем своего символа в игре */
-    public static void selectSymbolUser() {
-        String answer = "";
-        String dot_x = String.valueOf(DOT_X), dot_o = String.valueOf(DOT_O);
-        while (!answer.equals(dot_x) && !answer.equals(dot_o)) {
-            System.out.println("Крестик или нолик (ответ: " + DOT_X + " или " + DOT_O + " - англ. буквы)?");
-            answer = sc.nextLine();
-        }
-        humanSymb = answer.charAt(0);
-        if (humanSymb == DOT_O) {
-            aiSymb = DOT_X;
-        } else {
-            aiSymb = DOT_O;
-            stepHuman = true;
-        }
-
     }
 
     /** Точка входа в класс и приложение
      * @param args Массив строковых аргументов
      */
     public static void main(String[] args) {
-        // инициализируем
-        initMap();
-        // попросим пользователя выбрать себе символ
-        selectSymbolUser();
-        // отрисуем карту
-        printMap();
         // игра
-        while (true) {
-            if (stepHuman) {
-                humanTurn();
-            } else {
-                aiTurn();
-            }
-            printMap();
-            if (isGameEnd()) {
-                break;
-            }
-            stepHuman = !stepHuman;
-        }
+//        while (true) {
+//            if (stepHuman) {
+//                humanTurn();
+//            } else {
+//                aiTurn();
+//            }
+//            printMap();
+//            if (isGameEnd()) {
+//                break;
+//            }
+//            stepHuman = !stepHuman;
+//        }
     }
 }
