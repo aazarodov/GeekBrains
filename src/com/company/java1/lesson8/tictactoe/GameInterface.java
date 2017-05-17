@@ -99,7 +99,7 @@ public class GameInterface extends JFrame {
         jcbSymbolX.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                humanSymb = 'X';
+                humanSymb = AgentAI.DOT_X;
             }
         });
         JRadioButton jcbSymbolO = new JRadioButton("O");
@@ -107,7 +107,7 @@ public class GameInterface extends JFrame {
         jcbSymbolO.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                humanSymb = 'O';
+                humanSymb = AgentAI.DOT_O;
             }
         });
         ButtonGroup group = new ButtonGroup();
@@ -126,12 +126,10 @@ public class GameInterface extends JFrame {
         setLocationRelativeTo(null);
         setSize(400, 400);
         setResizable(true);
-
         // меню кнопок
         addMenu();
         // стартовая панель
         addStartPanel();
-
         setVisible(true);
     }
 }

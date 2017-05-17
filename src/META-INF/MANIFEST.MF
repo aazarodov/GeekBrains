@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: com.company.java1.lesson8.Game
+Main-Class: com.company.java1.lesson8.tictactoe.Game
 

@@ -1,4 +1,4 @@
-package com.company.java1.lesson8;
+package com.company.java1.lesson8.tictactoe;
 
 import com.company.java1.lesson8.tictactoe.GameInterface;
 
