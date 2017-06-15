@@ -18,8 +18,6 @@ public class GameField extends JPanel {
     private char[][] map;
     /** агент искусственного интеллекта */
     private AgentAI agentAI;
-    /** Символ ячейки, доступной для хода */
-    public static final char DOT_EMPTY = '•';
     /** кэш элементов с их координатами */
     private Map<GameCell, Integer[]> cacheOfLable = new HashMap<GameCell, Integer[]>();
 
@@ -33,7 +31,7 @@ public class GameField extends JPanel {
         map = new char[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                map[i][j] = DOT_EMPTY;
+                map[i][j] = AgentAI.DOT_EMPTY;
             }
         }
     }
@@ -68,9 +66,12 @@ public class GameField extends JPanel {
                 jCell.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
+                        // если уже игра еще не закончена, разрешаем выбор поля
                         if (!agentAI.isGameOver()) {
                             Component component = e.getComponent();
+                            // если щелкнули по ячейке игорового поля
                             if (component instanceof GameCell) {
+                                // если ячейка еще свободна, то разрешаем поставить символ
                                 if (((GameCell) component).getSymbol() == 0) {
                                     int[] cell = new int[2];
                                     cell[0] = cacheOfLable.get(((GameCell) component))[0];
@@ -78,13 +79,15 @@ public class GameField extends JPanel {
                                     agentAI.humanTurn(map, cell);
                                     ((GameCell) component).setSymbol(humanSymb);
                                     repaint();
+                                    // если не конец игры, то ход компьютера
                                     if (!agentAI.isGameEnd(map)) {
                                         aiTurn();
                                         agentAI.isGameEnd(map);
                                     }
                                     if (agentAI.isGameOver()) {
                                         textFin = agentAI.getTextFinish();
-                                        repaint();
+                                        JOptionPane.showMessageDialog(getParent(), agentAI.getTextFinish());
+                                        //repaint();
                                     }
                                 }
                             }
@@ -106,15 +109,15 @@ public class GameField extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
-        //if (!textFin.equals("")) {
-            Graphics2D g2 = (Graphics2D) g;
-            int fontSize = 20;
-            g2.setFont(new Font("TimesRoman", Font.BOLD, fontSize));
-            g2.setColor(Color.red);
-            int width = getWidth();
-            int height = getHeight();
-            g2.drawString("TEST", 10, 10);
-            repaint();
-        //}
+        if (!textFin.equals("")) {
+//            Graphics2D g2 = (Graphics2D) g;
+//            int fontSize = 20;
+//            g2.setFont(new Font("TimesRoman", Font.BOLD, fontSize));
+//            g2.setColor(Color.red);
+//            int width = getWidth();
+//            int height = getHeight();
+//            g2.drawString(textFin, 10, 10);
+//            g2.drawLine(0, 0, width, height);
+        }
     }
 }

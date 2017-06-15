@@ -316,7 +316,6 @@ public class AgentAI {
         int[] cell = aiSelectCell(map);
         x = cell[0];
         y = cell[1];
-        System.out.println("Хожу в (" + (x + 1) + ", " + (y + 1)  + ")");
         map[y][x] = aiSymb;
         countEmpty--;
         stepHuman = !stepHuman;
