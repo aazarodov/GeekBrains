@@ -1,4 +1,4 @@
-package com.company.java2.lesson1;
+package com.company.java2.homework1;
 
 public class Barrier {
     private String name;
@@ -27,8 +27,6 @@ public class Barrier {
 
     @Override
     public String toString() {
-        return "Barrier{" +
-                "name='" + name + '\'' +
-                '}';
+        return "Препятствие ";
     }
 }
