@@ -4,7 +4,7 @@ public class App {
     public final static int LENGTH = 4;
 
     public static void main(String[] args) {
-        String str = "1 3 1 2\n2 3 2 2\n5 6 7 1\n3 3 1 0";
+        String str = "1 3 1 2\n2 3 2 2\n5 r 7 1\n3 3 1 0";
         // преобразуем строку к массиву 4x4
         String[][] arrayOfString = stringToArray(str);
         int sum = 0;
@@ -41,15 +41,17 @@ public class App {
      */
     public static int sumOfCellsArray(String[][] arrayOfString) {
         int sum = 0;
+        String errArrayLength = "Размер массива не соответствует условиям задачи!";
+        String errArrayCellType = "Не удалось преобразовать значение к числу в ячейке";
         // если длина внешнего массива отличается, тогда исключение
         if (arrayOfString.length != LENGTH) {
-            throw new MySizeArrayException("Размер массива не соответствует условиям задачи!");
+            throw new MySizeArrayException(errArrayLength);
         } else {
             // обход внешнего массива
             for (int i = 0; i < LENGTH; i++) {
                 // если длина вложенного массива отличается, тогда исключение
                 if (arrayOfString[i].length != LENGTH) {
-                    throw new MySizeArrayException("Размер массива не соответствует условиям задачи!");
+                    throw new MySizeArrayException(errArrayLength);
                 } else {
                     // обход вложенного массива
                     for (int j = 0; j < arrayOfString[i].length; j++) {
@@ -57,7 +59,7 @@ public class App {
                         try {
                             sum += Integer.parseInt(arrayOfString[i][j]);
                         } catch (NumberFormatException e) {
-                            throw new MyArrayDataException("Не удалось преобразовать значение к числу в ячейке {" + i + ", " + j + "}!");
+                            throw new MyArrayDataException(errArrayCellType + " {" + i + ", " + j + "}!");
                         }
                     }
                 }
