@@ -1,5 +1,7 @@
 package com.company.java2.homework2;
 
+import java.util.Arrays;
+
 public class App {
     public final static int LENGTH = 4;
 
