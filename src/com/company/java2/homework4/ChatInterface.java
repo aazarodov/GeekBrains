@@ -47,7 +47,6 @@ public class ChatInterface extends JFrame {
         setLocationRelativeTo(null);
         setSize(400, 400);
         setResizable(true);
-
         // рамка для панелей
         Border border = BorderFactory.createCompoundBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),

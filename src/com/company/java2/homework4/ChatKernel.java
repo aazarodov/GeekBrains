@@ -7,6 +7,7 @@ import java.util.Date;
 public class ChatKernel {
     private StringBuilder history = new StringBuilder();
     private StringBuilder historyHtml = new StringBuilder();
+    private String path = "";
 
     public ChatKernel() {
 
