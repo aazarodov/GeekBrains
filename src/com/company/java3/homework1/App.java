@@ -34,9 +34,11 @@ public class App {
         Box<Apple> boxApple2 = new Box<>();
         boxApple2.addFruit(new Apple());
         boxApple2.addFruit(new Apple());
+        System.out.println(boxApple.compare(boxApple2));
         Box.pourFruits(boxApple, boxApple2);
         System.out.println(boxApple);
         System.out.println(boxApple2);
+        System.out.println(boxApple.compare(boxOrange));
     }
 
     /**
