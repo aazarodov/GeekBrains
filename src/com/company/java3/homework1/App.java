@@ -26,15 +26,15 @@ public class App {
         // Задание 3
         System.out.println("-- Task 3");
         Box<Orange> boxOrange = new Box<>();
-        boxOrange.addElem(new Orange());
-        boxOrange.addElem(new Orange());
+        boxOrange.addFruit(new Orange());
+        boxOrange.addFruit(new Orange());
         Box<Apple> boxApple = new Box<>();
-        boxApple.addElem(new Apple());
-        boxApple.addElem(new Apple());
+        boxApple.addFruit(new Apple());
+        boxApple.addFruit(new Apple());
         Box<Apple> boxApple2 = new Box<>();
-        boxApple2.addElem(new Apple());
-        boxApple2.addElem(new Apple());
-        boxApple2.pourFruit(boxApple);
+        boxApple2.addFruit(new Apple());
+        boxApple2.addFruit(new Apple());
+        Box.pourFruits(boxApple, boxApple2);
         System.out.println(boxApple);
         System.out.println(boxApple2);
     }
@@ -68,6 +68,5 @@ public class App {
     public static <T> ArrayList<T> convertToArrayList(T[] array) {
         return new ArrayList<>(Arrays.asList(array));
     }
-
 
 }

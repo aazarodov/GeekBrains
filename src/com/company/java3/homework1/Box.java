@@ -6,15 +6,13 @@ public class Box <T extends Fruit> {
     private ArrayList<T> arrayList = new ArrayList<>();
     protected float weightBox = 0;
 
-    public Box() {
-
-    }
+    public Box() {}
 
     /**
      * Метод позволяет добавить фрукт в коробку
      * @param elem
      */
-    public void addElem(T elem) {
+    public void addFruit(T elem) {
         this.arrayList.add(elem);
         this.weightBox += elem.getWeiht();
     }
@@ -45,12 +43,12 @@ public class Box <T extends Fruit> {
     }
 
     /**
-     * Метод позволяет пересыпать фрукты в текущую коробку.
+     * Метод позволяет пересыпать фрукты из одной коробки в другую.
      * @param source
      */
-    public void pourFruit(Box<T> source) {
-        this.arrayList.addAll(source.arrayList);
-        this.weightBox += source.weightBox;
+    public static <T extends Fruit> void pourFruits(Box<? extends T> source, Box<? super T> destination) {
+        destination.arrayList.addAll(source.arrayList);
+        destination.weightBox += source.weightBox;
         source.clear();
     }
 
