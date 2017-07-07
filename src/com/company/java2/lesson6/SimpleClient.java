@@ -2,6 +2,9 @@ package com.company.java2.lesson6;
 
 import java.io.*;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by aazar on 05.07.2017.
@@ -13,12 +16,13 @@ public class SimpleClient {
         this.socket = new Socket(host, port);
     }
 
-    private void handle(String message) throws IOException {
+    public void handle(String message) throws IOException {
         try(BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()))){
-            bufferedWriter.write(String.format("from client=[%s", message));
+            bufferedWriter.write(message);
+            bufferedWriter.newLine();
             bufferedWriter.flush();
-            System.out.println(String.format("from client=[%s", message, bufferedReader.readLine()));
+            System.out.println(String.format("Server: %s", message, bufferedReader.readLine()));
         };
     }
 }

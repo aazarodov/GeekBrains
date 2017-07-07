@@ -14,26 +14,21 @@ public class SimpleServer implements Runnable {
         this.serverSocket = new ServerSocket(port);
     }
 
-    public void handle() throws IOException {
-        try (Socket clienSocket = this.serverSocket.accept();
-             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(clienSocket.getOutputStream()))) {
-            bufferedWriter.write("HELLO USER");
-            bufferedWriter.flush();
-        }
-
-    }
-
     @Override
     public void run() {
-        while (true) {
+        //while (true) {
             try (Socket clientSocket = this.serverSocket.accept();
                  BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
-                bufferedWriter.write("HELLO USER");
+                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())))
+            {
+                System.out.println(String.format("Client: %s", bufferedReader.readLine()));
+
+                bufferedWriter.write("HELLO CLIENT");
+                bufferedWriter.newLine();
                 bufferedWriter.flush();
             } catch (IOException ex) {
-
+                ex.printStackTrace();
             }
-        }
+        //}
     }
 }
