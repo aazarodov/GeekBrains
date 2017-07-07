@@ -30,7 +30,6 @@ public class ClientHandler implements Runnable {
 
     public void close() throws IOException {
         this.isStop = true;
-        //this.socket.close();
     }
 
     @Override
