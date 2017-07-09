@@ -32,40 +32,42 @@ public class ChatInterface extends JFrame {
      */
     public void sendMessage(String messageText) {
         if (!messageText.isEmpty()) {
-            chatKernel.setHistory(messageText, "I");
-            message.setText("");
-            history.setText(chatKernel.getHistoryHtml());
+            this.chatKernel.setHistory(messageText.trim(), "I");
+            this.message.setText("");
+            this.history.setText(chatKernel.getHistoryHtml());
         }
+        this.message.requestFocus();
     }
 
     /**
      * Метод инициализирует главное окно приложения
      */
     public void init() {
-        setTitle(APP_TITLE);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setSize(400, 400);
-        setResizable(true);
+        this.setLayout(new BorderLayout());
+        this.setTitle(APP_TITLE);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        this.setSize(400, 400);
+        this.setResizable(true);
         // рамка для панелей
         Border border = BorderFactory.createCompoundBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                 BorderFactory.createEmptyBorder(2, 1, 2, 1));
         // верхняя панель окна
         // поле истории сообщений
-        history = new JTextPane();
-        history.setContentType("text/html");
-        history.setEditable(false);
+        this.history = new JTextPane();
+        this.history.setContentType("text/html");
+        this.history.setEditable(false);
         JScrollPane scroller = new JScrollPane(history);
         scroller.setBorder(border);
-        add(scroller);
+        this.add(scroller);
         // нижняя панель окна
         JPanel jBottomPanel = new JPanel();
         jBottomPanel.setLayout(new BorderLayout());
         jBottomPanel.setBorder(border);
         // поле ввода сообщение
-        message = new JTextArea();
-        message.addKeyListener(new KeyAdapter() {
+        this.message = new JTextArea();
+        this.message.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 if(e.getKeyChar() == KeyEvent.VK_ENTER) {
@@ -75,7 +77,7 @@ public class ChatInterface extends JFrame {
                 }
             }
         });
-        jBottomPanel.add(message, BorderLayout.CENTER);
+        jBottomPanel.add(this.message, BorderLayout.CENTER);
         // кнопка отправить
         JButton buttonSend = new JButton("Send");
         buttonSend.addActionListener(new ActionListener() {
@@ -85,7 +87,8 @@ public class ChatInterface extends JFrame {
             }
         });
         jBottomPanel.add(buttonSend, BorderLayout.EAST);
-        add(jBottomPanel, BorderLayout.SOUTH);
-        setVisible(true);
+        this.add(jBottomPanel, BorderLayout.SOUTH);
+        this.setVisible(true);
+        this.message.requestFocus();
     }
 }

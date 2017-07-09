@@ -14,7 +14,7 @@ public class ChatKernel {
     }
 
     public String getHistory() {
-        return history.toString();
+        return this.history.toString();
     }
 
     /**

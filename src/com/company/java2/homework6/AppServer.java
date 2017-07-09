@@ -21,9 +21,10 @@ public class AppServer {
             // читаем, что ввод пользователь
             String message;
             Scanner scanner = new Scanner(System.in);
-            while ((message = scanner.nextLine()) != "exit") {
+            do  {
+                message = scanner.nextLine();
                 clientHandler.handle(message);
-            }
+            } while (!message.equals("exit"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
