@@ -38,36 +38,50 @@ public class App {
      * @throws IOException
      */
     public static void task2() throws IOException {
+        System.out.println("Задание №2");
+        String path = "Java3Homework3Task2";
+        String fileResult = "Result.txt";
         ArrayList<FileInputStream> arrayListOfIS = new ArrayList<>();
-        FileOutputStream fileOutputStream = new FileOutputStream("Java3Homework3Task2\\Result.txt");
+        FileOutputStream fileOutputStream = new FileOutputStream(path + "\\" + fileResult);
         FileFilter fileFilter = new FileFilter() {
             @Override
             public boolean accept(File file) {
-                return !file.getName().equals("Result.txt");
+                return !file.getName().equals(fileResult);
             }
         };
-        File fileCatalog = new File("Java3Homework3Task2");
+        File fileCatalog = new File(path);
         for (File file : fileCatalog.listFiles(fileFilter)) {
             arrayListOfIS.add(new FileInputStream(file.getAbsoluteFile()));
         }
         Enumeration<FileInputStream> e = Collections.enumeration(arrayListOfIS);
         SequenceInputStream sequenceIS = new SequenceInputStream(e);
-        byte[] arrayOfByte = new byte[sequenceIS.available()];
-        while ((sequenceIS.read(arrayOfByte)) > 0) {
-            fileOutputStream.write(arrayOfByte);
+        byte[] arrayOfByte = new byte[8192];
+        int length;
+        while ((length = sequenceIS.read(arrayOfByte)) > 0) {
+            fileOutputStream.write(arrayOfByte, 0, length);
         }
-        sequenceIS.close();
         fileOutputStream.close();
+        sequenceIS.close();
     }
 
     /**
-     *
+     * Задание 3. Написать консольное приложение, которое умеет постранично читать текстовые файлы (размером > 10 mb),
+     * вводим страницу, программа выводит ее в консоль (за страницу можно принять 1800 символов).
+     * Время чтения файла должно находится в разумных пределах (программа не должна загружаться дольше 10 секунд),
+     * ну и чтение тоже не должно занимать > 5 секунд.
+     * @throws IOException
      */
     public static void task3() throws IOException {
+        System.out.println("Задание №3");
+        String tip = "Для открытия файла введите '/readfile <путь к файлу>'";
+        String readFile = "/readfile";
+        System.out.println(tip);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        FileInputStream fileInputStream;
         String buffer;
         Integer page;
         while (!(buffer = bufferedReader.readLine()).equals("exit")) {
+            if (buffer.startsWith(readFile))
             Integer.parseInt(buffer);
 
         }
