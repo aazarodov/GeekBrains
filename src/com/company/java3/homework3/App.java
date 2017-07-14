@@ -1,7 +1,6 @@
 package com.company.java3.homework3;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,7 +12,7 @@ import java.util.Enumeration;
 public class App {
     public static void main(String[] args) {
         try {
-            task2();
+            task3();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,17 +72,47 @@ public class App {
      */
     public static void task3() throws IOException {
         System.out.println("Задание №3");
-        String tip = "Для открытия файла введите '/readfile <путь к файлу>'";
-        String readFile = "/readfile";
-        System.out.println(tip);
+        // переменный с подсказками
+        String tipOpenFile = "Для открытия файла введите '/readfile <путь к файлу>'";
+        String tipViewPage = "Для просмотра страницы файла введите '/page <номер страницы>' (%s - %s)";
+        // переменные с командами
+        String readFile = "/readfile", viewPage = "/page";
+        // переменные с потоками
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         FileInputStream fileInputStream;
-        String buffer;
-        Integer page;
+        // временные переменные
+        String buffer, fileName = "", emptyString = "";
+        int page, length, countPage = 0;
+        long available = 0;
+        // массив для чтения
+        byte[] arrayOfByte = new byte[1800];
+        System.out.println(tipOpenFile);
+        // ожидаем ввода пользователя, пока не введено exit
         while (!(buffer = bufferedReader.readLine()).equals("exit")) {
-            if (buffer.startsWith(readFile))
-            Integer.parseInt(buffer);
-
+            // если читаем новый файл
+            if (buffer.startsWith(readFile)) {
+                fileName = buffer.replace(readFile, emptyString).trim();
+                fileInputStream = new FileInputStream(fileName);
+                available = fileInputStream.available();
+                // всего страниц в файле
+                countPage = (int)((available + (1800 - available % 1800)) / 1800);
+                fileInputStream.close();
+                System.out.println(String.format(tipViewPage, 1, countPage));
+            // если читаем страницу открытого файла
+            } else if (!fileName.trim().equals(emptyString) && buffer.startsWith(viewPage)) {
+                fileInputStream = new FileInputStream(fileName);
+                page = Integer.parseInt(buffer.replace(viewPage, "").trim());
+                // если ввели существующую страницу, выведем ее в консоль
+                if (countPage >= page) {
+                    // пропустим страницы предшествующие введенной
+                    fileInputStream.skip((page - 1) * 1800);
+                    if ((length = fileInputStream.read(arrayOfByte)) > 0) {
+                        System.out.println(new String(Arrays.copyOfRange(arrayOfByte, 0, length)));
+                    }
+                    System.out.println(String.format(tipViewPage, 1, countPage));
+                }
+                fileInputStream.close();
+            }
         }
     }
 }
