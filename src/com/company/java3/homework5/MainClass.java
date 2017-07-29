@@ -12,15 +12,10 @@ package com.company.java3.homework5;
 // Можете корректировать классы(в т.ч. конструктор машин)
 // и добавлять объекты классов из пакета util.concurrent
 
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 
 public class MainClass {
     public static final int CARS_COUNT = 4;
-    // счетчик автомобилей, неготовых к гонке
-    private static final CountDownLatch COUNT_CARS_READY = new CountDownLatch(CARS_COUNT);
-    // счетчик автомобилей, незакончивших гонку
-    private static final CountDownLatch COUNT_CARS_FINISHED = new CountDownLatch(CARS_COUNT);
     // барьер, после которого начинается гонка (барьер ждет все автомобили, а также основной поток,
     // чтобы вывести сообщение о начале гонки)
     private static final CyclicBarrier START_RACE = new CyclicBarrier(CARS_COUNT + 1);
@@ -32,8 +27,6 @@ public class MainClass {
         for (int i = 0; i < cars.length; i++) {
             cars[i] = new Car(race,
                                 20 + (int) (Math.random() * 10),
-                                COUNT_CARS_READY,
-                                COUNT_CARS_FINISHED,
                                 START_RACE);
         }
         for (int i = 0; i < cars.length; i++) {
@@ -41,12 +34,12 @@ public class MainClass {
         }
         try {
             // ждем пока все автомобили подготовятся к гонке
-            COUNT_CARS_READY.await();
+            START_RACE.await();
             System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
             // снимаем барьем (все автомобили готовы, значит барьер ждет только основной поток)
             START_RACE.await();
-            // ждем пока все автомобили не финишируют
-            COUNT_CARS_FINISHED.await();
+            // ждем когда все придут к финишу
+            START_RACE.await();
             System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!");
         } catch (Exception e) {
             e.printStackTrace();
